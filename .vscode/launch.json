@@ -11,7 +11,7 @@
             "module": "streamlit",
             "args": [
                 "run",
-                "ptmdatabase/app.py",
+                "app.py",
             ],
             "console": "integratedTerminal"
         },
