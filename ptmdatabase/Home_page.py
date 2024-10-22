@@ -4,12 +4,6 @@ import sys
 import time
 
 def main():
-    st.set_page_config(
-        page_title="Phospho Proteomic Database Generation App",
-        page_icon="🧬",
-        layout="wide",
-        initial_sidebar_state="expanded",
-    )
 
     st.markdown(
         """
@@ -36,16 +30,13 @@ def main():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div class='title'>Welcome to Phosphoproteomic Database Generation App</div>", unsafe_allow_html=True)
+    st.markdown("<div class='title'>Welcome to Proteoform Database Generation App</div>", unsafe_allow_html=True)
     st.write("\n")
-
 
     st.header("Overview")
     st.write("""
-    Different from traditional database, this method integrate the phosphosites directly to the entry name and the protein sequence. 
-    Additionally, the application also offer the function to customize the phosphosites in the protein sequence to the letter or symbol as their desire. 
-    This database, even though only compatible with MSFragger at the moment since this is the only search engine that offers four letter words (B, X, Z) with customizable dynamic modification mass
-    This idea aims to reduce the search space and searching time, while also achieve a similar or better performance than traditional database where only the dynamic modification is specified in the search engine parameter.        
+    Different from traditional databases, this method integrates phosphosites directly into the entry name and protein sequence. 
+    Additionally, the application offers the option to customize the phosphosites in the protein sequence to a letter or symbol of choice...
     """)
 
     st.header("Database Upgrade")
@@ -54,11 +45,10 @@ def main():
     This process involves:
     1. Analyzing the current database for performance.
     2. Identifying missing proteins or phosphorylation sites.
-    3. Integrating the new information into the existing database.
-    This ensures that your database is comprehensive and up-to-date.
+    3. Integrating new information into the existing database.
     """)
-
-
+    
+    # Example of an exit button
     left_column2, right_column2 = st.columns([18, 2])
     with right_column2:
         st.write("\n")
@@ -68,10 +58,4 @@ def main():
             time.sleep(5)
             os._exit(0)
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        work_dir = sys.argv[1]
-        if not st.session_state.get('work_dir'):
-            st.session_state['work_dir'] = work_dir
-
-    main()
+# This file will be imported by `app.py` to render the home page
