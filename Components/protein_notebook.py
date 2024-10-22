@@ -8,7 +8,7 @@ def show_protein_viewer():
     # --- Data Loading and Processing ---
     
     # Read the data from the 'data' folder (adjust the path accordingly)
-    data_path = os.path.join('ptmdatabase', 'data', 'Protein_filter.csv')
+    data_path = os.path.join('data', 'Protein_filter.csv')
     data = pd.read_csv(data_path)
 
     # Pivot the data into long format

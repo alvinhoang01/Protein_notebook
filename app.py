@@ -44,7 +44,7 @@ def display_sidebar_and_pages():
         show_home_page()
 
     elif page == "Protein Notebook":
-        from ptmdatabase.Components.protein_notebook import show_protein_viewer as show_database_page
+        from Components.protein_notebook import show_protein_viewer as show_database_page
         show_database_page()
 
     elif page == "Matrix Analysis":
