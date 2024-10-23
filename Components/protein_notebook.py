@@ -82,7 +82,6 @@ def show_protein_viewer():
             st.plotly_chart(intensity_fig, use_container_width=True)
 
         with tab2:
-            st.subheader(f"CV for {protein}")
             cv_fig = px.bar(
                 filtered_data_cv,
                 x='Method',
