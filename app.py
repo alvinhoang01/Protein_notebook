@@ -10,7 +10,7 @@ def display_sidebar_and_pages():
     with st.sidebar:
         page = option_menu(
             menu_title=None,
-            options=["Home Page", "Protein Notebook", "Matrix Analysis"],
+            options=["Home Page", "Methods", "Biological Matrices"],
             icons=["house", "database", "bar-chart-line"],
             menu_icon="cast",
             default_index=0,
@@ -43,12 +43,12 @@ def display_sidebar_and_pages():
         from Home_page import main as show_home_page
         show_home_page()
 
-    elif page == "Protein Notebook":
-        from Components.protein_notebook import show_protein_viewer as show_database_page
+    elif page == "Methods":
+        from Components.Proteomic_methods import show_protein_viewer as show_database_page
         show_database_page()
 
-    elif page == "Matrix Analysis":
-        from Components.Matrix_analysis import main as show_matrix_analysis_page
+    elif page == "Biological Matrices":
+        from Components.Proteomic_matrices import show_protein_total_viewer as show_matrix_analysis_page
         show_matrix_analysis_page()
 
     # No logout button needed since authentication is removed

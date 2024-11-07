@@ -49,34 +49,43 @@ def show_protein_viewer():
     data_long = pd.merge(data_long, data_cv[['Protein', 'Method', 'CV']], on=['Protein', 'Method'], how='left')
 
     # --- Streamlit App Interface ---
-    st.title("Plasma Proteomics Data Viewer")
+    st.title("Proteomic Methods")
 
     # Sidebar inputs for protein search and selection
     st.sidebar.header("Search Options")
-    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions")
+    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions", key="protein_search_method")
     protein_options = data_long['Protein'].unique()
     protein_select = st.sidebar.selectbox("Select PG.ProteinAccessions", protein_options)
     search = st.sidebar.button("Search")
+    reset = st.sidebar.button("Reset to Full Table")
 
-    # If the 'Search' button is clicked
+    # Display either full or filtered data based on search or reset
     if search:
         # Determine which protein to filter by
         protein = protein_search if protein_search != "" else protein_select
         filtered_data = data_long[data_long['Protein'] == protein]
         filtered_data_cv = data_cv[data_cv['Protein'] == protein]
 
-        # Create tabs for the two plots and the data table
-        tab1, tab2, tab3 = st.tabs(["MS Intensity Plot", "CV Plot", "Data Table"])
+        # If there are multiple values per method, consider aggregating before plotting
+        aggregated_data = filtered_data.groupby(['Method']).agg(
+            mean_intensity=('value', 'mean')
+        ).reset_index()
+
+        # Display filtered data and plots
+        st.subheader(f"Data Table for {protein}")
+        st.dataframe(filtered_data, use_container_width=True)  # Use full width for filtered data
+
+        # Create tabs for the two plots
+        tab1, tab2 = st.tabs(["MS Intensity Plot", "CV Plot"])
 
         with tab1:
+            # Use aggregated data if needed
             intensity_fig = px.bar(
-                filtered_data,
+                aggregated_data,
                 x='Method',
-                y='value',
+                y='mean_intensity',
                 color='Method',
-                barmode='group',
-                hover_data=['Replicate'],
-                labels={'value': 'MS Intensity'},
+                labels={'mean_intensity': 'Mean MS Intensity'},
                 title=f"MS Intensity for {protein}"
             )
             st.plotly_chart(intensity_fig, use_container_width=True)
@@ -92,12 +101,10 @@ def show_protein_viewer():
             )
             st.plotly_chart(cv_fig, use_container_width=True)
 
-        with tab3:
-            st.subheader("Filtered Data Table")
-            st.dataframe(filtered_data)
-
     else:
-
-        # Optionally, display the full data table
+        # Display the full data table by default or when reset is clicked
         st.subheader("Full Data Table")
-        st.dataframe(data_long)
+        st.dataframe(data_long, use_container_width=True)  # Use full width for full data
+
+# Run the viewer function
+show_protein_viewer()
