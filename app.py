@@ -10,8 +10,8 @@ def display_sidebar_and_pages():
     with st.sidebar:
         page = option_menu(
             menu_title=None,
-            options=["Home Page", "Methods", "Biological Matrices"],
-            icons=["house", "database", "bar-chart-line"],
+            options=["Home Page", "Methods", "Biological Matrices", "Extracellular vesicle"],
+            icons=["house", "diagram-3", "droplet", "capsule"],
             menu_icon="cast",
             default_index=0,
             orientation="vertical",
@@ -50,6 +50,10 @@ def display_sidebar_and_pages():
     elif page == "Biological Matrices":
         from Components.Proteomic_matrices import show_protein_total_viewer as show_matrix_analysis_page
         show_matrix_analysis_page()
+    
+    elif page == "Extracellular vesicle":
+        from Components.Extracellular_vesicle import show_protein_extracellular_vesicle as show_ev_protein
+        show_ev_protein()
 
     # No logout button needed since authentication is removed
     # if st.sidebar.button('🔒 Logout'):
@@ -60,7 +64,7 @@ def display_sidebar_and_pages():
 # --- Main Function ---
 def main():
     st.set_page_config(
-        page_title="Proteoform Database Generation App",
+        page_title="Blood Proteomic Notebook",
         page_icon="🧬",
         layout="wide",
         initial_sidebar_state="collapsed",

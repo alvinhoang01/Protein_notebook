@@ -67,11 +67,11 @@ def show_protein_total_viewer():
 
     # Sidebar inputs for protein search and selection
     st.sidebar.header("Search Options")
-    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions", key="protein_search_matrice")
     protein_options = data_long['PG.ProteinAccessions'].unique()
-    protein_select = st.sidebar.selectbox("Select PG.ProteinAccessions", protein_options)
-    search = st.sidebar.button("Search")
-    reset = st.sidebar.button("Reset to Full Table")
+    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions", key="filtered_protein_search")
+    protein_select = st.sidebar.selectbox("Select PG.ProteinAccessions", protein_options, key="filtered_protein_select")
+    search = st.sidebar.button("Search", key="filtered_search_button")
+    reset = st.sidebar.button("Reset to Full Table", key="filtered_reset_button")
 
     # Display either full or filtered data based on search or reset
     if search:

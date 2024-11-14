@@ -1,10 +1,7 @@
 import streamlit as st
 import os
-import sys
-import time
 
 def main():
-
     st.markdown(
         """
         <style>
@@ -30,24 +27,19 @@ def main():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div class='title'>Welcome to Proteoform Database Generation App</div>", unsafe_allow_html=True)
+    st.markdown("<div class='title'>Blood Protein Notebook</div>", unsafe_allow_html=True)
     st.write("\n")
 
-    st.header("Overview")
+    # Display the static image (logo or decorative image)
+    data_path = os.path.join('data', "Protein_logo.png")
+    st.image(data_path, use_column_width=True)
+
     st.write("""
-    Different from traditional databases, this method integrates phosphosites directly into the entry name and protein sequence. 
-    Additionally, the application offers the option to customize the phosphosites in the protein sequence to a letter or symbol of choice...
+    Our web platform enables researchers to access mass spectrometry-based proteomics data on protein detectability, signal intensity, and quantification reproducibility across various sample preparation methods. Explore features including:
+    - Comparative performance analysis of blood proteins across different sample preparation techniques
+    - Comprehensive performance analysis of proteins in different clinical samples
     """)
 
-    st.header("Database Upgrade")
-    st.write("""
-    Upgrade your database by adding new proteins and phosphorylation sites based on analysis results.
-    This process involves:
-    1. Analyzing the current database for performance.
-    2. Identifying missing proteins or phosphorylation sites.
-    3. Integrating new information into the existing database.
-    """)
-    
     # Example of an exit button
     left_column2, right_column2 = st.columns([18, 2])
     with right_column2:
@@ -55,7 +47,6 @@ def main():
         st.write("\n")
         if st.button('Exit'):
             st.error("The app has been stopped. Please close the browser window manually.")
-            time.sleep(5)
             os._exit(0)
 
 # This file will be imported by `app.py` to render the home page

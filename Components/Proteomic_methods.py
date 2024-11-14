@@ -52,12 +52,15 @@ def show_protein_viewer():
     st.title("Proteomic Methods")
 
     # Sidebar inputs for protein search and selection
+    # Sidebar inputs for protein search and selection
     st.sidebar.header("Search Options")
-    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions", key="protein_search_method")
     protein_options = data_long['Protein'].unique()
-    protein_select = st.sidebar.selectbox("Select PG.ProteinAccessions", protein_options)
-    search = st.sidebar.button("Search")
-    reset = st.sidebar.button("Reset to Full Table")
+    protein_search = st.sidebar.text_input("Enter PG.ProteinAccessions", key="total_protein_search")
+    protein_select = st.sidebar.selectbox("Select PG.ProteinAccessions", protein_options, key="total_protein_select")
+    search = st.sidebar.button("Search", key="total_search_button")
+    reset = st.sidebar.button("Reset to Full Table", key="total_reset_button")
+
+
 
     # Display either full or filtered data based on search or reset
     if search:
