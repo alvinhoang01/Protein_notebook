@@ -64,7 +64,7 @@ def display_sidebar_and_pages():
 # --- Main Function ---
 def main():
     st.set_page_config(
-        page_title="Blood Proteomic Notebook",
+        page_title="Human Blood Proteomics Atlas",
         page_icon="🧬",
         layout="wide",
         initial_sidebar_state="collapsed",
