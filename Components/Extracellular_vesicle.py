@@ -47,7 +47,7 @@ def show_protein_extracellular_vesicle():
         
         # Update layout to remove legend and align categories
         quantity_fig.update_layout(
-            showlegend=False,  # Hide legend
+            showlegend=True,  # Hide legend
             xaxis=dict(
                 title='Sample',
                 categoryorder="array",

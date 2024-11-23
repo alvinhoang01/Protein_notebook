@@ -27,7 +27,7 @@ def main():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div class='title'>Blood Protein Notebook</div>", unsafe_allow_html=True)
+    st.markdown("<div class='title'>Human Blood Proteomics Atlas</div>", unsafe_allow_html=True)
     st.write("\n")
 
     # Display the static image (logo or decorative image)
