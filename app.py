@@ -65,7 +65,7 @@ def display_sidebar_and_pages():
 def main():
     st.set_page_config(
         page_title="Human Blood Proteomics Atlas",
-        page_icon="🧬",
+        page_icon="🩸",
         layout="wide",
         initial_sidebar_state="collapsed",
     )
