@@ -8,7 +8,7 @@ def show_protein_viewer():
     # --- Data Loading and Processing ---
 
     # Read the data from the 'data' folder (adjust the path accordingly)
-    data_path = os.path.join('data', 'Protein_filter.csv')
+    data_path = os.path.join('data', 'method_total.csv')
     data = pd.read_csv(data_path)
 
     # Pivot the data into long format
@@ -20,10 +20,12 @@ def show_protein_viewer():
             data_long['Sample'].str.contains('Preomics'),
             data_long['Sample'].str.contains('Thermokit'),
             data_long['Sample'].str.contains('Direct'),
-            data_long['Sample'].str.contains('Seer_NPA'),
-            data_long['Sample'].str.contains('Seer_NPB')
+            data_long['Sample'].str.contains('Seer'),
+            data_long['Sample'].str.contains('CO'),
+            data_long['Sample'].str.contains('EV'),
+            data_long['Sample'].str.contains('SPEG')
         ],
-        ['Preomics', 'Thermo', 'Direct', 'Seer_NPA', 'Seer_NPB'],
+        ['Preomics', 'Thermo', 'Direct', 'Seer', 'CO', 'EV', 'SPEG'],
         default=np.nan
     )
 
@@ -38,6 +40,10 @@ def show_protein_viewer():
         default=np.nan
     )
 
+    # Map Replicate to specific colors for the legend
+    replicate_color_map = {'R1': 'red', 'R2': 'blue', 'R3': 'green', 'R4': 'purple'}
+    data_long['ReplicateColor'] = data_long['Replicate'].map(replicate_color_map)
+
     # Calculate mean, standard deviation, and CV for each Protein-Method group
     data_cv = data_long.groupby(['Protein', 'Method']).agg(
         mean_Intensity=('Intensity', 'mean'),
@@ -46,10 +52,10 @@ def show_protein_viewer():
     data_cv['CV'] = (data_cv['sd_Intensity'] / data_cv['mean_Intensity']) * 100
 
     # Merge the CV back into the long data frame
-    data_long = pd.merge(data_long, data_cv[['Protein', 'Method', 'CV']], on=['Protein', 'Method'], how='left')
+    data_long = pd.merge(data_long, data_cv[['Protein', 'Method', 'mean_Intensity', 'sd_Intensity', 'CV']], on=['Protein', 'Method'], how='left')
 
     # --- Streamlit App Interface ---
-    st.title("Proteomic Methods")
+    st.title("Methods")
 
     # Sidebar inputs for protein search and selection
     st.sidebar.header("Search Options")
@@ -65,47 +71,69 @@ def show_protein_viewer():
         entered_proteins = [p.strip() for p in protein_search.split(',') if p.strip()]
         selected_proteins = protein_select
         proteins_to_filter = list(set(entered_proteins + selected_proteins))
-
         filtered_data = data_long[data_long['Protein'].isin(proteins_to_filter)]
         st.subheader(f"Data Table for {', '.join(proteins_to_filter)}")
-        st.dataframe(filtered_data, use_container_width=True)  # Use full width for filtered data
+        st.dataframe(filtered_data, use_container_width=True)  # Always display the data table
 
-        if len(proteins_to_filter) > 5:
-            st.warning("The bar chart currently supports displaying data for up to 5 proteins. Please reduce the number of selected proteins.")
+        if len(proteins_to_filter) > 4:
+            st.warning("The current data visualization supports only up to 4 proteins. Please reduce your selection for visualization.")
         else:
             filtered_data_cv = data_cv[data_cv['Protein'].isin(proteins_to_filter)]
-
-            # If there are multiple values per method, consider aggregating before plotting
-            aggregated_data = filtered_data.groupby(['Method', 'Protein']).agg(
-                mean_intensity=('Intensity', 'mean')
-            ).reset_index()
 
             # Create tabs for the two plots
             tab1, tab2 = st.tabs(["MS Intensity Plot", "CV Plot"])
 
             with tab1:
-                intensity_fig = px.bar(
-                    aggregated_data,
-                    x='Method',
-                    y='mean_intensity',
-                    color='Protein',
-                    barmode='group',
-                    labels={'mean_intensity': 'Mean MS Intensity'},
-                    title=f"MS Intensity for Selected Proteins"
-                )
-                st.plotly_chart(intensity_fig, use_container_width=True)
+                # Create side-by-side bar charts for each selected protein
+                col1, col2 = st.columns(2)
+                for i, protein in enumerate(proteins_to_filter):
+                    protein_data = filtered_data[filtered_data['Protein'] == protein]
+                    mean_data = protein_data.drop_duplicates(subset=['Method', 'mean_Intensity'])
+
+                    with (col1 if i % 2 == 0 else col2):
+                        # st.markdown(f"### {protein}")
+                        intensity_fig = px.bar(
+                            mean_data,
+                            x='Method',
+                            y='mean_Intensity',
+                            labels={'mean_Intensity': 'Average MS Intensity'},
+                            title=f"MS Intensity for {protein}"
+                        )
+                        for replicate, color in replicate_color_map.items():
+                            replicate_data = protein_data[protein_data['Replicate'] == replicate]
+                            intensity_fig.add_scatter(
+                                x=replicate_data['Method'],
+                                y=replicate_data['Intensity'],
+                                mode='markers',
+                                marker=dict(size=8, color=color),
+                                name=replicate
+                            )
+                        intensity_fig.update_layout(legend_title_text="Replicates")
+                        st.plotly_chart(intensity_fig, use_container_width=True)
 
             with tab2:
-                cv_fig = px.bar(
-                    filtered_data_cv,
-                    x='Method',
-                    y='CV',
-                    color='Protein',
-                    barmode='group',
-                    labels={'CV': 'Coefficient of Variation (CV)'},
-                    title=f"CV for Selected Proteins"
-                )
-                st.plotly_chart(cv_fig, use_container_width=True)
+                # Ensure methods in the filtered_data_cv are ordered correctly
+                method_order = ['Preomics', 'Thermo', 'Direct', 'Seer', 'CO', 'EV', 'SPEG']
+                filtered_data_cv['Method'] = pd.Categorical(filtered_data_cv['Method'], categories=method_order, ordered=True)
+
+                col1, col2 = st.columns(2)
+                for i, protein in enumerate(proteins_to_filter):
+                    protein_data_cv = filtered_data_cv[filtered_data_cv['Protein'] == protein]
+
+                    # Sort by Method to ensure proper ordering
+                    protein_data_cv = protein_data_cv.sort_values(by='Method')
+
+                    with (col1 if i % 2 == 0 else col2):
+                        # Create the CV bar plot
+                        cv_fig = px.bar(
+                            protein_data_cv,
+                            x='Method',
+                            y='CV',
+                            labels={'CV': 'Coefficient of Variation (CV)'},
+                            title=f"CV for {protein}"
+                        )
+                        cv_fig.update_layout(legend_title_text="Replicates")
+                        st.plotly_chart(cv_fig, use_container_width=True)
 
     else:
         # Display the full data table by default or when reset is clicked

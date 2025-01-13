@@ -10,7 +10,7 @@ def display_sidebar_and_pages():
     with st.sidebar:
         page = option_menu(
             menu_title=None,
-            options=["Home Page", "Methods", "Biological Matrices", "Extracellular vesicle"],
+            options=["Home Page", "Methods", "Sample Types", "Disease"],
             icons=["house", "diagram-3", "droplet", "capsule"],
             menu_icon="cast",
             default_index=0,
@@ -47,13 +47,13 @@ def display_sidebar_and_pages():
         from Components.Proteomic_methods import show_protein_viewer as show_database_page
         show_database_page()
 
-    elif page == "Biological Matrices":
+    elif page == "Sample Types":
         from Components.Proteomic_matrices import show_protein_total_viewer as show_matrix_analysis_page
         show_matrix_analysis_page()
     
-    elif page == "Extracellular vesicle":
-        from Components.Extracellular_vesicle import show_protein_extracellular_vesicle as show_ev_protein
-        show_ev_protein()
+    elif page == "Disease":
+        from Components.Disease import show_protein_disease as show_disease
+        show_disease()
 
     # No logout button needed since authentication is removed
     # if st.sidebar.button('🔒 Logout'):

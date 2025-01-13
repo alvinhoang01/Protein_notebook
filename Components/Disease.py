@@ -3,11 +3,11 @@ import pandas as pd
 import os
 import plotly.express as px
 
-def show_protein_total_viewer():
+def show_protein_disease():
     # --- Data Loading and Processing ---
     
     # Load the new data file
-    data_path = os.path.join('data', 'blood_protein_total.csv')
+    data_path = os.path.join('data', 'Normal_disease_protein_total.csv')
     data = pd.read_csv(data_path)
 
     # Replace values for better readability
@@ -16,7 +16,7 @@ def show_protein_total_viewer():
     )
 
     # --- Streamlit App Interface ---
-    st.title("Sample Types")
+    st.title("Disease")
 
     # Sidebar inputs for protein search and selection
     st.sidebar.header("Search Options")
@@ -56,4 +56,4 @@ def show_protein_total_viewer():
         st.dataframe(data, use_container_width=True)
 
 # Run the viewer function
-show_protein_total_viewer()
+show_protein_disease()
