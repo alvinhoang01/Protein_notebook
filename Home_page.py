@@ -8,7 +8,7 @@ def main():
             .title {
                 font-family: "Arial", sans-serif;
                 color: #008080;
-                font-size: 50px;
+                font-size: 30px;
                 font-weight: bold;
             }
             .subtitle {
@@ -24,11 +24,11 @@ def main():
             }
             .description {
                 font-family: "Arial", sans-serif;
-                font-size: 28px;  
+                font-size: 22px;  
                 line-height: 1.6;
             }
             .description li {
-                font-size: 25px;
+                font-size: 19px;
                 margin-bottom: 8px;
             }
         </style>
@@ -46,9 +46,9 @@ def main():
     image = Image.open(data_path)
 
     # Create three columns and put the image in the center one
-    col1, col2, col3 = st.columns([1, 2, 2])
+    col1, col2, col3 = st.columns([0.5, 2, 2])
     with col2:
-        st.image(image, width=1000)
+        st.image(image, width=800)
 
 
     st.markdown(
