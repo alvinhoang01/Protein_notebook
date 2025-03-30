@@ -46,7 +46,7 @@ def main():
     image = Image.open(data_path)
 
     # Create three columns and put the image in the center one
-    col1, col2, col3 = st.columns([0.8, 2, 2])
+    col1, col2, col3 = st.columns([1, 2, 2])
     with col2:
         st.image(image, width=800)
 
