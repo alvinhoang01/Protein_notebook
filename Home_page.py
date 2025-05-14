@@ -65,6 +65,7 @@ def main():
 )
 
     # Example of an exit button
+    '''
     left_column2, right_column2 = st.columns([18, 2])
     with right_column2:
         st.write("\n")
@@ -72,5 +73,6 @@ def main():
         if st.button('Exit'):
             st.error("The app has been stopped. Please close the browser window manually.")
             os._exit(0)
+    '''
 
 # This file will be imported by `app.py` to render the home page
